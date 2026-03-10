@@ -1,0 +1,30 @@
+node_modules/
+.next/
+
+# Java/Maven build outputs
+backend/target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+hs_err_pid*
+
+# IDE files (Java-related)
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+
+# Frontend build/cache artifacts
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.turbo/
+frontend/.vercel/
+frontend/.cache/
+
+# Frontend env files
+frontend/.env
+frontend/.env.*
