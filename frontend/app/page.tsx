@@ -15,7 +15,7 @@ export default function HomePage() {
 
     const loadMessage = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/hello", {
+        const response = await fetch("http://localhost:8080/api/v1/hello", {
           method: "GET"
         });
 
@@ -43,12 +43,20 @@ export default function HomePage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-white text-slate-900 flex items-center justify-center p-6">
-      <section className="max-w-xl w-full rounded-2xl border border-slate-200 shadow-sm p-8 text-center">
-        <h1 className="text-3xl font-semibold">Olá, mundo</h1>
-        <p className="mt-4 text-lg text-slate-700">
+    <main className="page">
+      <section className="card">
+        <h1 className="title">Olá, mundo</h1>
+        <p className="subtitle">
           {error ? `Erro: ${error}` : message}
         </p>
+        <div className="actions center spacing-top">
+          <a href="/pautas/new" className="button button-primary">
+            Cadastrar nova pauta
+          </a>
+          <a href="/pautas" className="button button-secondary">
+            Listar Pautas
+          </a>
+        </div>
       </section>
     </main>
   );

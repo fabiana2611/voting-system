@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16
+    container_name: votacao-assembleia-db
+    environment:
+      POSTGRES_DB: votacao_assembleia
+      POSTGRES_USER: votacao
+      POSTGRES_PASSWORD: votacao
+    ports:
+      - "5432:5432"
+    volumes:
+      - votacao_assembleia_data:/var/lib/postgresql/data
+
+volumes:
+  votacao_assembleia_data:

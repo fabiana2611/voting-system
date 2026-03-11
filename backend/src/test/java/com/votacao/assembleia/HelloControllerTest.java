@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.votacao.assembleia.controller.HelloController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,7 +18,7 @@ class HelloControllerTest {
 
   @Test
   void shouldReturnHelloWorldMessage() throws Exception {
-    mockMvc.perform(get("/api/hello"))
+    mockMvc.perform(get("/api/v1/hello"))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.message").value("Hello World"));
   }

@@ -26,6 +26,13 @@ O frontend se comunica exclusivamente com o backend via REST. Persistência de d
 
 Backend (porta 8080):
 
+Pré-requisito: banco PostgreSQL via Docker.
+
+1. Acesse a raiz do projeto.
+2. Execute docker compose up -d.
+
+Isso inicia o banco em localhost:5432 com as credenciais usadas pelo backend.
+
 1. Acesse a pasta backend.
 2. Execute mvn spring-boot:run.
 
@@ -34,3 +41,10 @@ Frontend (porta 3000):
 1. Acesse a pasta frontend.
 2. Execute npm install.
 3. Execute npm run dev.
+
+### Teste de performance
+
+Para executar o teste de performance com 100 votos concorrentes:
+
+1. Acesse a pasta backend.
+2. Execute mvn -Dtest=SessionPerformanceTest test.
