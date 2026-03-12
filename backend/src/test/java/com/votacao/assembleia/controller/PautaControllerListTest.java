@@ -1,13 +1,13 @@
-package com.votacao.assembleia;
+package com.votacao.assembleia.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.votacao.assembleia.controller.PautaController;
 import com.votacao.assembleia.repository.PautaEntity;
 import com.votacao.assembleia.repository.PautaRepository;
 import com.votacao.assembleia.repository.SessionRepository;
+import com.votacao.assembleia.repository.VoteRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.mockito.Mockito.when;
@@ -29,6 +29,9 @@ class PautaControllerListTest {
 
   @MockitoBean
   private SessionRepository sessionRepository;
+
+  @MockitoBean
+  private VoteRepository voteRepository;
 
   @Test
   void shouldListPautas() throws Exception {

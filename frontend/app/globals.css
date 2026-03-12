@@ -128,6 +128,17 @@ main.page {
   border-color: var(--primary-hover);
 }
 
+.button-danger {
+  background: var(--danger);
+  color: #fff;
+  border-color: var(--danger);
+}
+
+.button-danger:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
 .button-secondary {
   border-color: var(--border);
   background: var(--surface);

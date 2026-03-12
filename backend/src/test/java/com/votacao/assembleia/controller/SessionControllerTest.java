@@ -1,4 +1,4 @@
-package com.votacao.assembleia;
+package com.votacao.assembleia.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -7,7 +7,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-import com.votacao.assembleia.controller.SessionController;
 import com.votacao.assembleia.repository.PautaEntity;
 import com.votacao.assembleia.repository.PautaRepository;
 import com.votacao.assembleia.repository.SessionEntity;
@@ -65,11 +64,15 @@ class SessionControllerTest {
     when(pautaRepository.findById(anyString())).thenReturn(java.util.Optional.of(pauta));
     when(sessionRepository.save(any(SessionEntity.class)))
       .thenAnswer(invocation -> java.util.Objects.requireNonNull(invocation.getArgument(0, SessionEntity.class)));
+    when(sessionRepository.saveAndFlush(any(SessionEntity.class)))
+      .thenAnswer(invocation -> java.util.Objects.requireNonNull(invocation.getArgument(0, SessionEntity.class)));
     when(sessionRepository.findById(anyString())).thenReturn(java.util.Optional.of(session));
     String userCpf = "678.990.942-75";
     when(userRepository.existsById(userCpf)).thenReturn(true);
-    when(voteRepository.existsBySessionIdAndUserId(session.getId(), userCpf))
+    when(voteRepository.existsBySessionIdAndUserId(anyString(), org.mockito.ArgumentMatchers.eq(userCpf)))
       .thenReturn(false, true);
+    when(voteRepository.saveAndFlush(any(com.votacao.assembleia.repository.VoteEntity.class)))
+      .thenAnswer(invocation -> invocation.getArgument(0));
 
     String responseBody = mockMvc.perform(post("/api/v1/pautas/" + pauta.getId() + "/sessions"))
       .andExpect(status().isCreated())

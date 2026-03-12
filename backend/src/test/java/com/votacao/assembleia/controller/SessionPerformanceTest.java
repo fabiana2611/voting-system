@@ -1,4 +1,4 @@
-package com.votacao.assembleia;
+package com.votacao.assembleia.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
-import com.votacao.assembleia.controller.SessionController;
 import com.votacao.assembleia.repository.PautaEntity;
 import com.votacao.assembleia.repository.PautaRepository;
 import com.votacao.assembleia.repository.SessionEntity;
@@ -69,6 +68,12 @@ class SessionPerformanceTest {
         storedSession.set(saved);
         return saved;
       });
+    when(sessionRepository.saveAndFlush(any(SessionEntity.class)))
+      .thenAnswer(invocation -> {
+        SessionEntity saved = invocation.getArgument(0, SessionEntity.class);
+        storedSession.set(saved);
+        return saved;
+      });
     when(sessionRepository.findById(anyString()))
       .thenAnswer(invocation -> java.util.Optional.ofNullable(storedSession.get()));
 
@@ -84,6 +89,12 @@ class SessionPerformanceTest {
       });
 
     when(voteRepository.save(any(VoteEntity.class)))
+      .thenAnswer(invocation -> {
+        VoteEntity vote = invocation.getArgument(0, VoteEntity.class);
+        voted.add(vote.getSessionId() + ":" + vote.getUserId());
+        return vote;
+      });
+    when(voteRepository.saveAndFlush(any(VoteEntity.class)))
       .thenAnswer(invocation -> {
         VoteEntity vote = invocation.getArgument(0, VoteEntity.class);
         voted.add(vote.getSessionId() + ":" + vote.getUserId());

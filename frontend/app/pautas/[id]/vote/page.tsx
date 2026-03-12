@@ -16,6 +16,11 @@ type SessionResponse = {
 
 type VoteChoice = "YES" | "NO";
 
+type VoteErrorResponse = {
+  code?: string;
+  message?: string;
+};
+
 export default function PautaVotePage() {
   const params = useParams<{ id: string }>();
   const searchParams = useSearchParams();
@@ -91,7 +96,24 @@ export default function PautaVotePage() {
       );
 
       if (!response.ok) {
-        throw new Error("Falha ao enviar voto");
+        let errorMessage = "Falha ao enviar voto";
+
+        try {
+          const errorPayload = (await response.json()) as VoteErrorResponse;
+          if (errorPayload.message) {
+            errorMessage = errorPayload.message;
+          }
+        } catch {
+          // Keep fallback message when response has no JSON body.
+        }
+
+        if (response.status === 409) {
+          errorMessage = "CPF ja votou nesta sessao.";
+        } else if (response.status === 410) {
+          errorMessage = "Sessao expirada. Nao e possivel registrar novos votos.";
+        }
+
+        throw new Error(errorMessage);
       }
 
       const data = (await response.json()) as SessionResponse;

@@ -17,6 +17,7 @@ export default function PautasListPage() {
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
   const [startingId, setStartingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const startSession = async (pautaId: string) => {
     setStartingId(pautaId);
@@ -37,6 +38,41 @@ export default function PautasListPage() {
       setError(err instanceof Error ? err.message : "Erro inesperado");
     } finally {
       setStartingId(null);
+    }
+  };
+
+  const deletePauta = async (pautaId: string) => {
+    const shouldDelete = window.confirm("Tem certeza que deseja remover esta pauta?");
+    if (!shouldDelete) {
+      return;
+    }
+
+    setDeletingId(pautaId);
+    setError(null);
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/pautas/${pautaId}`, {
+        method: "DELETE"
+      });
+
+      if (response.status === 409) {
+        throw new Error("Nao e possivel remover pauta com sessao aberta");
+      }
+
+      if (response.status === 404) {
+        setPautas((current) => current.filter((pauta) => pauta.id !== pautaId));
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error("Falha ao remover pauta");
+      }
+
+      setPautas((current) => current.filter((pauta) => pauta.id !== pautaId));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erro inesperado");
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -104,6 +140,7 @@ export default function PautasListPage() {
                     <th>Sim</th>
                     <th>Não</th>
                     <th>Sessão</th>
+                    <th>Delete</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -125,6 +162,16 @@ export default function PautasListPage() {
                             {startingId === pauta.id ? "Abrindo..." : "Iniciar sessão"}
                           </button>
                         )}
+                      </td>
+                      <td>
+                        <button
+                          type="button"
+                          onClick={() => deletePauta(pauta.id)}
+                          disabled={deletingId === pauta.id || startingId === pauta.id || !pauta.hasSession}
+                          className="button button-danger"
+                        >
+                          {deletingId === pauta.id ? "Removing..." : "Delete"}
+                        </button>
                       </td>
                     </tr>
                   ))}

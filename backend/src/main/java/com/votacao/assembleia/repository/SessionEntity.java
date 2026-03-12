@@ -2,19 +2,32 @@ package com.votacao.assembleia.repository;
 
 import java.time.Instant;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "sessions")
+@Table(
+  name = "sessions",
+  uniqueConstraints = {
+    @UniqueConstraint(name = "uk_sessions_pauta_id", columnNames = { "pauta_id" })
+  },
+  indexes = {
+    @Index(name = "idx_sessions_pauta_id", columnList = "pauta_id")
+  }
+)
 public class SessionEntity {
 
   @Id
   private String id;
 
+  @Column(name = "pauta_id", nullable = false)
   private String pautaId;
 
+  @Column(name = "pauta_name", nullable = false)
   private String pautaName;
 
   private Instant openedAt;
